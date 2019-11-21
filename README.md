@@ -4,7 +4,7 @@
 
 Image Signal Processor (ISP) is an application processor to do digital image processing, specifically for conversion from RAW image (acquired from Imaging Sensors) to RGB/YUV image (to further processing or display).
 
-![](https://github.com/cruxopen/openISP/blob/master/images/.png)
+![](https://github.com/cruxopen/openISP/blob/master/images/Image%20Signal%20Processor.png)
 
 ## Objectives
 
