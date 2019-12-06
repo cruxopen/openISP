@@ -220,7 +220,6 @@ print(50*'-' + '\nAnti-aliasing Filtering Done......')
 #plt.imshow(rawimg_diff, cmap='gray')
 #plt.show()
 
-
 # white balance gain control
 parameter = [r_gain, gr_gain, gb_gain, b_gain]
 awb = WBGC(rawimg_aaf, parameter, bayer_pattern, awb_clip)
