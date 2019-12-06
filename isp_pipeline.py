@@ -3,15 +3,19 @@ import numpy as np
 import csv
 from model.dpc import DPC
 from model.blc import BLC
+from model.aaf import AAF
 from model.awb import WBGC
+from model.cnf import CNF
 from model.cfa import CFA
 from model.gac import GC
 from model.ccm import CCM
 from model.csc import CSC
+from model.bnf import BNF
 from model.eeh import EE
 from model.fcs import FCS
 from model.bcc import BCC
 from model.hsc import HSC
+from model.nlm import NLM
 
 raw_path = './raw/test.RAW'
 config_path = './config/config.csv'
@@ -41,6 +45,10 @@ with f:
     cfa_clip = 1023
     ccm = np.zeros((3, 4))
     csc = np.zeros((3, 4))
+    bnf_dw = np.zeros((5,5))
+    bnf_rw = [1, 1, 1, 1]
+    bnf_rthres = [32, 64, 128]
+    bnf_clip = 255
     edge_filter = np.zeros((3, 5))
     ee_gain = [32, 128]
     ee_thres = [32, 64]
@@ -55,6 +63,8 @@ with f:
     brightness = 10  # [-255, 255]
     contrast = 10 / pow(2, 5)  # [-32,128]
     bcc_clip = 255
+    nlm_h = 10
+    nlm_clip = 255
     for row in reader:
         parameter = row[0]
         value = row[1]
@@ -112,6 +122,30 @@ with f:
             csc[2][1] = 1024 * float(value) if '_21' in str(parameter) else csc[2][1]
             csc[2][2] = 1024 * float(value) if '_22' in str(parameter) else csc[2][2]
             csc[2][3] = 1024 * float(value) if '_23' in str(parameter) else csc[2][3]
+        elif 'bnf' in str(parameter):
+            bnf_dw[0][0] = int(value) if '_dw_00' in str(parameter) else bnf_dw[0][0]
+            bnf_dw[0][1] = int(value) if '_dw_01' in str(parameter) else bnf_dw[0][1]
+            bnf_dw[0][2] = int(value) if '_dw_02' in str(parameter) else bnf_dw[0][2]
+            bnf_dw[0][3] = int(value) if '_dw_03' in str(parameter) else bnf_dw[0][3]
+            bnf_dw[0][4] = int(value) if '_dw_04' in str(parameter) else bnf_dw[0][4]
+            bnf_dw[1][0] = int(value) if '_dw_10' in str(parameter) else bnf_dw[1][0]
+            bnf_dw[1][1] = int(value) if '_dw_11' in str(parameter) else bnf_dw[1][1]
+            bnf_dw[1][2] = int(value) if '_dw_12' in str(parameter) else bnf_dw[1][2]
+            bnf_dw[1][3] = int(value) if '_dw_13' in str(parameter) else bnf_dw[1][3]
+            bnf_dw[1][4] = int(value) if '_dw_14' in str(parameter) else bnf_dw[1][4]
+            bnf_dw[2][0] = int(value) if '_dw_20' in str(parameter) else bnf_dw[2][0]
+            bnf_dw[2][1] = int(value) if '_dw_21' in str(parameter) else bnf_dw[2][1]
+            bnf_dw[2][2] = int(value) if '_dw_22' in str(parameter) else bnf_dw[2][2]
+            bnf_dw[2][3] = int(value) if '_dw_23' in str(parameter) else bnf_dw[2][3]
+            bnf_dw[2][4] = int(value) if '_dw_24' in str(parameter) else bnf_dw[2][4]
+            bnf_rw[0] = int(value) if '_rw_0' in str(parameter) else bnf_rw[0]
+            bnf_rw[1] = int(value) if '_rw_1' in str(parameter) else bnf_rw[1]
+            bnf_rw[2] = int(value) if '_rw_2' in str(parameter) else bnf_rw[2]
+            bnf_rw[3] = int(value) if '_rw_3' in str(parameter) else bnf_rw[3]
+            bnf_rthres[0] = int(value) if '_rthres_0' in str(parameter) else bnf_rthres[0]
+            bnf_rthres[1] = int(value) if '_rthres_1' in str(parameter) else bnf_rthres[1]
+            bnf_rthres[2] = int(value) if '_rthres_2' in str(parameter) else bnf_rthres[2]
+            bnf_clip = int(value) if '_clip' in str(parameter) else bnf_clip
         elif 'edge_filter' in str(parameter):
             edge_filter[0][0] = int(value) if '_00' in str(parameter) else edge_filter[0][0]
             edge_filter[0][1] = int(value) if '_01' in str(parameter) else edge_filter[0][1]
@@ -141,6 +175,9 @@ with f:
             fcs_gain = int(value) if '_gain' in str(parameter) else fcs_gain
             fcs_intercept = int(value) if '_intercept' in str(parameter) else fcs_intercept
             fcs_slope = int(value) if '_slope' in str(parameter) else fcs_slope
+        elif 'nlm' in str(parameter):
+            nlm_h = int(value) if '_h' in str(parameter) else nlm_h
+            nlm_clip = int(value) if '_clip' in str(parameter) else nlm_clip
         else:
             hue = int(value) if 'hue' in str(parameter) else hue
             saturation = int(value) if 'saturation' in str(parameter) else saturation
@@ -167,28 +204,53 @@ parameter = [bl_r, bl_gr, bl_gb, bl_b, alpha, beta]
 blc = BLC(rawimg_dpc, parameter, bayer_pattern, blc_clip)
 rawimg_blc = blc.execute()
 print(50*'-' + '\nBlack Level Compensation Done......')
-#plt.imshow(rawimg_dpc, cmap='gray')
 #plt.imshow(rawimg_blc, cmap='gray')
 #plt.show()
 
 # lens shading correction
 
+# anti-aliasing filter
+aaf = AAF(rawimg_blc)
+rawimg_aaf = aaf.execute()
+print(50*'-' + '\nAnti-aliasing Filtering Done......')
+#plt.imshow(rawimg_aaf, cmap='gray')
+#plt.show()
+
+#rawimg_diff = rawimg_blc - rawimg_aaf
+#plt.imshow(rawimg_diff, cmap='gray')
+#plt.show()
+
+
 # white balance gain control
 parameter = [r_gain, gr_gain, gb_gain, b_gain]
-awb = WBGC(rawimg_blc, parameter, bayer_pattern, awb_clip)
+awb = WBGC(rawimg_aaf, parameter, bayer_pattern, awb_clip)
 rawimg_awb = awb.execute()
 print(50*'-' + '\nWhite Balance Gain Done......')
 #plt.imshow(rawimg_awb, cmap='gray')
 #plt.show()
 
+# chroma noise filtering
+cnf = CNF(rawimg_awb, bayer_pattern, 0, parameter, 1023)
+rawimg_cnf = cnf.execute()
+print(50*'-' + '\nChroma Noise Filtering Done......')
+#plt.imshow(rawimg_cnf/4, cmap='gray')
+#plt.show()
+
 # color filter array interpolation
-cfa = CFA(rawimg_awb, cfa_mode, bayer_pattern, cfa_clip)
+cfa = CFA(rawimg_cnf, cfa_mode, bayer_pattern, cfa_clip)
 rgbimg_cfa = cfa.execute()
 print(50*'-' + '\nDemosaicing Done......')
 #plt.imshow(rgbimg_cfa/4)
 #plt.show()
 
-# gamma correction 
+# color correction matrix
+ccm = CCM(rgbimg_cfa, ccm)
+rgbimg_ccm = ccm.execute()
+print(50*'-' + '\nColor Correction Done......')
+#plt.imshow(rgbimg_ccm)
+#plt.show()
+
+# gamma correction
 # look up table
 bw = 10
 gamma = 0.5
@@ -199,28 +261,35 @@ ind = range(0, maxval)
 val = [round(pow(float(i)/maxval, gamma) * maxval) for i in ind]
 lut = dict(zip(ind, val))
 #print(ind, val, lut)
-gc = GC(rgbimg_cfa, lut, mode)
+gc = GC(rgbimg_ccm, lut, mode)
 rgbimg_gc = gc.execute()
 print(50*'-' + '\nGamma Correction Done......')
 #plt.imshow(rgbimg_gc)
-#plt.show()
-
-# color correction matrix
-ccm = CCM(rgbimg_gc, ccm)
-rgbimg_ccm = ccm.execute()
-print(50*'-' + '\nColor Correction Done......')
-#plt.imshow(rgbimg_ccm)
 #plt.show()
 
 # color space conversion
 csc = CSC(rgbimg_ccm, csc)
 yuvimg_csc = csc.execute()
 print(50*'-' + '\nColor Space Conversion Done......')
-#plt.imshow(yuvimg_csc[:,:,0])
+#plt.imshow(yuvimg_csc[:,:,0], cmap='gray')
+#plt.show()
+
+# non-local means denoising
+nlm = NLM(yuvimg_csc[:,:,0], 1, 4, nlm_h, nlm_clip)
+yuvimg_nlm = nlm.execute()
+print(50*'-' + '\nNon Local Means Denoising Done......')
+#plt.imshow(yuvimg_nlm, cmap='gray')
+#plt.show()
+
+# bilateral filter
+bnf = BNF(yuvimg_nlm, bnf_dw, bnf_rw, bnf_rthres, bnf_clip)
+yuvimg_bnf = bnf.execute()
+print(50*'-' + '\nBilateral Filtering Done......')
+#plt.imshow(yuvimg_bnf, cmap='gray')
 #plt.show()
 
 # edge enhancement
-ee = EE(yuvimg_csc[:,:,0], edge_filter, ee_gain, ee_thres, ee_emclip)
+ee = EE(yuvimg_bnf[:,:], edge_filter, ee_gain, ee_thres, ee_emclip)
 yuvimg_ee, yuvimg_edgemap = ee.execute()
 print(50*'-' + '\nEdge Enhancement Done......')
 #plt.imshow(yuvimg_ee)

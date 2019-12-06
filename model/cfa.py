@@ -77,7 +77,7 @@ class CFA:
                     gr = img_pad[y+3,x+2]
                     r = img_pad[y+3,x+3]
                     if self.mode == 'malvar':
-                        cfa_img[y,x,:] = self.alvar('b', b, y+2,x+2, img_pad)
+                        cfa_img[y,x,:] = self.malvar('b', b, y+2,x+2, img_pad)
                         cfa_img[y,x+1,:] = self.malvar('gb', gb, y+2,x+3, img_pad)
                         cfa_img[y+1,x,:] = self.malvar('gr', gr, y+3,x+2, img_pad)
                         cfa_img[y+1,x+1,:] = self.malvar('r', r, y+3,x+3, img_pad)

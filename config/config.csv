@@ -42,6 +42,39 @@ csc_20,0.439,CSC
 csc_21,-0.368,CSC
 csc_22,-0.071,CSC
 csc_23,128,CSC offset
+bnf_dw_00,8,BNF distance weights
+bnf_dw_01,12,BNF distance weights
+bnf_dw_02,32,BNF distance weights
+bnf_dw_03,12,BNF distance weights
+bnf_dw_04,8,BNF distance weights
+bnf_dw_10,12,BNF distance weights
+bnf_dw_11,64,BNF distance weights
+bnf_dw_12,128,BNF distance weights
+bnf_dw_13,64,BNF distance weights
+bnf_dw_14,12,BNF distance weights
+bnf_dw_20,32,BNF distance weights
+bnf_dw_21,128,BNF distance weights
+bnf_dw_22,1024,BNF distance weights
+bnf_dw_23,128,BNF distance weights
+bnf_dw_24,32,BNF distance weights
+bnf_dw_30,12,BNF distance weights
+bnf_dw_31,64,BNF distance weights
+bnf_dw_32,128,BNF distance weights
+bnf_dw_33,64,BNF distance weights
+bnf_dw_34,12,BNF distance weights
+bnf_dw_40,8,BNF distance weights
+bnf_dw_41,12,BNF distance weights
+bnf_dw_42,32,BNF distance weights
+bnf_dw_43,12,BNF distance weights
+bnf_dw_44,8,BNF distance weights
+bnf_rw_0,0,BNF radiometric diff
+bnf_rw_1,8,BNF radiometric diff
+bnf_rw_2,16,BNF radiometric diff
+bnf_rw_3,32,BNF radiometric diff
+bnf_rthres_0,128,BNF diff threshold
+bnf_rthres_1,32,BNF diff threshold
+bnf_rthres_2,8,BNF diff threshold
+bnf_clip,255,BNF clip value
 edge_filter_00,-1,Edge filter
 edge_filter_01,0,Edge filter
 edge_filter_02,-1,Edge filter
@@ -68,6 +101,8 @@ fcs_edge_max,64,FCS edge max value
 fcs_gain,32,FCS gain
 fcs_intercept,2,FCS intercept
 fcs_slope,3,FCS slope
+nlm_h,15,NLM sigma
+nlm_clip,255,NLM clip
 hue,128,Hue value
 saturation,256,Saturation gain
 hsc_clip,255,HSC clip value
