@@ -21,6 +21,6 @@ class BCC:
         for y in range(img_h):
             for x in range(img_w):
                 bcc_img[y,x] = self.img[y,x] + self.brightness
-                bcc_img[y,x] = self.bcc_img[y,x] + (self.bcc_img[y,x] - 127) * self.contrast
+                bcc_img[y,x] = bcc_img[y,x] + (bcc_img[y,x] - 127) * self.contrast
         self.img = bcc_img
         return self.clipping()

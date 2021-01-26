@@ -35,7 +35,7 @@ class BLC:
                     blc_img[y,x+1] = gr
                     blc_img[y+1,x] = gb
                     blc_img[y+1,x+1] = b
-                elif bayer_pattern == 'bggr':
+                elif self.bayer_pattern == 'bggr':
                     b = self.img[y,x] + bl_b
                     r = self.img[y+1,x+1] + bl_r
                     gb = self.img[y,x+1] + bl_gb + beta * b / 256
@@ -44,7 +44,7 @@ class BLC:
                     blc_img[y,x+1] = gb
                     blc_img[y+1,x] = gr
                     blc_img[y+1,x+1] = r
-                elif bayer_pattern == 'gbrg':
+                elif self.bayer_pattern == 'gbrg':
                     b = self.img[y,x+1] + bl_b
                     r = self.img[y+1,x] + bl_r
                     gb = self.img[y,x] + bl_gb + beta * b / 256
@@ -53,7 +53,7 @@ class BLC:
                     blc_img[y,x+1] = b
                     blc_img[y+1,x] = r
                     blc_img[y+1,x+1] = gr
-                elif bayer_pattern == 'grbg':
+                elif self.bayer_pattern == 'grbg':
                     r = self.img[y,x+1] + bl_r
                     b = self.img[y+1,x] + bl_b
                     gr = self.img[y,x] + bl_gr + alpha * r / 256
