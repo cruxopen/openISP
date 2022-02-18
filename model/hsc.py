@@ -32,7 +32,7 @@ class HSC:
             for x in range(img_w):
                 hsc_img[y,x,0] = (self.img[y,x,0] - 128) * lut_cos[self.hue] + (self.img[y,x,1] - 128) * lut_sin[self.hue] + 128
                 hsc_img[y,x,1] = (self.img[y,x,1] - 128) * lut_cos[self.hue] - (self.img[y,x,0] - 128) * lut_sin[self.hue] + 128
-                hsc_img[y,x,0] = self.saturation * (self.hsc_img[y,x,0] - 128) / 256 + 128
-                hsc_img[y,x,1] = self.saturation * (self.hsc_img[y,x,1] - 128) / 256 + 128
+                hsc_img[y,x,0] = self.saturation * (hsc_img[y,x,0] - 128) / 256 + 128
+                hsc_img[y,x,1] = self.saturation * (hsc_img[y,x,1] - 128) / 256 + 128
         self.img = hsc_img
         return self.clipping()
