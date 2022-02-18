@@ -18,9 +18,7 @@ class BCC:
         img_h = self.img.shape[0]
         img_w = self.img.shape[1]
         bcc_img = np.empty((img_h, img_w), np.int16)
-        for y in range(img_h):
-            for x in range(img_w):
-                bcc_img[y,x] = self.img[y,x] + self.brightness
-                bcc_img[y,x] = bcc_img[y,x] + (bcc_img[y,x] - 127) * self.contrast
+        bcc_img = self.img + self.brightness
+        bcc_img = bcc_img + (bcc_img - 127) * self.contrast
         self.img = bcc_img
         return self.clipping()
