@@ -19,12 +19,27 @@ class DPC:
         return self.img
 
     def execute(self):
+
+        """
+        Pixel array in code is showed above:
+
+        p1 p2 p3
+        p4 p0 p5
+        p6 p7 p8
+
+        it makes sense for calculating follow-up gradients of pixel values (horizontal,vertical,left/right diagonal).
+        """
+
+        
         img_pad = self.padding()
         raw_h = self.img.shape[0]
         raw_w = self.img.shape[1]
         dpc_img = np.empty((raw_h, raw_w), np.uint16)
         for y in range(img_pad.shape[0] - 4):
             for x in range(img_pad.shape[1] - 4):
+
+
+
                 p0 = img_pad[y + 2, x + 2]
                 p1 = img_pad[y, x]
                 p2 = img_pad[y, x + 2]
