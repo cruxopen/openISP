@@ -30,25 +30,29 @@ class DPC:
         it makes sense for calculating follow-up gradients of pixel values (horizontal,vertical,left/right diagonal).
         """
 
-        
+
         img_pad = self.padding()
         raw_h = self.img.shape[0]
         raw_w = self.img.shape[1]
-        dpc_img = np.empty((raw_h, raw_w), np.uint16)
+        dpc_img = np.empty((raw_h, raw_w), np.uint16) 
+        # change uint16 to int_, still exists overflow warning  in the following abs calculation
         for y in range(img_pad.shape[0] - 4):
             for x in range(img_pad.shape[1] - 4):
 
 
 
-                p0 = img_pad[y + 2, x + 2]
-                p1 = img_pad[y, x]
-                p2 = img_pad[y, x + 2]
-                p3 = img_pad[y, x + 4]
-                p4 = img_pad[y + 2, x]
-                p5 = img_pad[y + 2, x + 4]
-                p6 = img_pad[y + 4, x]
-                p7 = img_pad[y + 4, x + 2]
-                p8 = img_pad[y + 4, x + 4]
+                p0 = img_pad[y + 2, x + 2].astype(int)
+                p1 = img_pad[y, x].astype(int)
+                p2 = img_pad[y, x + 2].astype(int)
+                p3 = img_pad[y, x + 4].astype(int)
+                p4 = img_pad[y + 2, x].astype(int)
+                p5 = img_pad[y + 2, x + 4].astype(int)
+                p6 = img_pad[y + 4, x].astype(int)
+                p7 = img_pad[y + 4, x + 2].astype(int)
+                p8 = img_pad[y + 4, x + 4].astype(int)
+
+
+
                 if (abs(p1 - p0) > self.thres) and (abs(p2 - p0) > self.thres) and (abs(p3 - p0) > self.thres) \
                         and (abs(p4 - p0) > self.thres) and (abs(p5 - p0) > self.thres) and (abs(p6 - p0) > self.thres) \
                         and (abs(p7 - p0) > self.thres) and (abs(p8 - p0) > self.thres):
@@ -67,7 +71,7 @@ class DPC:
                             p0 = (p1 + p8 + 1) / 2
                         else:
                             p0 = (p3 + p6 + 1) / 2
-                dpc_img[y, x] = p0
+                dpc_img[y, x] = p0.astype('uint16')
         self.img = dpc_img
         return self.clipping()
 
