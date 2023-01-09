@@ -1,0 +1,111 @@
+﻿Variables,Values,Description
+raw_w,192,Raw image width
+raw_h,108,Raw image height
+dpc_thres,30,DPC threshold
+dpc_mode,gradient,DPC mode
+dpc_clip,1023,DPC clip value
+bayer_pattern,rggb,Bayer pattern
+bl_r,0,Black level offset of Red channel
+bl_gr,0,Black level offset of Green(R) channel
+bl_gb,0,Black level offset of Green(B) channel
+bl_b,0,Black level offset of Blue channel
+alpha,0,Fusion parameter for Red channel
+beta,0,Fusion parameter for Blue channel
+blc_clip,1023,BLC clip value
+r_gain,1.5,AWB Red gain
+gr_gain,1,AWB Green(R) gain
+gb_gain,1.1,AWB Green(B) gain
+awb_clip,1023,AWB clip value
+cfa_mode,malvar,Demosaic mode
+cfa_clip,1023,CFA clip value
+ccm_00,1024,CCM
+ccm_01,0,CCM
+ccm_02,0,CCM
+ccm_03,0,CCM offset
+ccm_10,0,CCM
+ccm_11,1024,CCM
+ccm_12,0,CCM
+ccm_13,0,CCM offset
+ccm_20,0,CCM
+ccm_21,0,CCM
+ccm_22,1024,CCM
+ccm_23,0,CCM offset
+csc_00,0.257,CSC
+csc_01,0.504,CSC
+csc_02,0.098,CSC
+csc_03,16,CSC offset
+csc_10,-0.148,CSC
+csc_11,-0.291,CSC
+csc_12,0.439,CSC
+csc_13,128,CSC offset
+csc_20,0.439,CSC
+csc_21,-0.368,CSC
+csc_22,-0.071,CSC
+csc_23,128,CSC offset
+bnf_dw_00,8,BNF distance weights
+bnf_dw_01,12,BNF distance weights
+bnf_dw_02,32,BNF distance weights
+bnf_dw_03,12,BNF distance weights
+bnf_dw_04,8,BNF distance weights
+bnf_dw_10,12,BNF distance weights
+bnf_dw_11,64,BNF distance weights
+bnf_dw_12,128,BNF distance weights
+bnf_dw_13,64,BNF distance weights
+bnf_dw_14,12,BNF distance weights
+bnf_dw_20,32,BNF distance weights
+bnf_dw_21,128,BNF distance weights
+bnf_dw_22,1024,BNF distance weights
+bnf_dw_23,128,BNF distance weights
+bnf_dw_24,32,BNF distance weights
+bnf_dw_30,12,BNF distance weights
+bnf_dw_31,64,BNF distance weights
+bnf_dw_32,128,BNF distance weights
+bnf_dw_33,64,BNF distance weights
+bnf_dw_34,12,BNF distance weights
+bnf_dw_40,8,BNF distance weights
+bnf_dw_41,12,BNF distance weights
+bnf_dw_42,32,BNF distance weights
+bnf_dw_43,12,BNF distance weights
+bnf_dw_44,8,BNF distance weights
+bnf_rw_0,0,BNF radiometric diff
+bnf_rw_1,8,BNF radiometric diff
+bnf_rw_2,16,BNF radiometric diff
+bnf_rw_3,32,BNF radiometric diff
+bnf_rthres_0,128,BNF diff threshold
+bnf_rthres_1,32,BNF diff threshold
+bnf_rthres_2,8,BNF diff threshold
+bnf_clip,255,BNF clip value
+edge_filter_00,-1,Edge filter
+edge_filter_01,0,Edge filter
+edge_filter_02,-1,Edge filter
+edge_filter_03,0,Edge filter
+edge_filter_04,-1,Edge filter
+edge_filter_10,-1,Edge filter
+edge_filter_11,0,Edge filter
+edge_filter_12,8,Edge filter
+edge_filter_13,0,Edge filter
+edge_filter_14,-1,Edge filter
+edge_filter_20,-1,Edge filter
+edge_filter_21,0,Edge filter
+edge_filter_22,-1,Edge filter
+edge_filter_23,0,Edge filter
+edge_filter_24,-1,Edge filter
+ee_gain_min,32,Edge enhancement min gain
+ee_gain_max,128,Edge enhancement max gain
+ee_thres_min,32,Edge enhancement min threshold
+ee_thres_max,64,Edge enhancement max threshold
+ee_emclip_min,-64,Edge map min clip value
+ee_emclip_max,64,Edge map max clip value
+fcs_edge_min,32,FCS edge min value
+fcs_edge_max,64,FCS edge max value
+fcs_gain,32,FCS gain
+fcs_intercept,2,FCS intercept
+fcs_slope,3,FCS slope
+nlm_h,15,NLM sigma
+nlm_clip,255,NLM clip
+hue,128,Hue value
+saturation,256,Saturation gain
+hsc_clip,255,HSC clip value
+brightness,10,Brightness
+contrast,10,Contast gain
+bcc_clip,255,BCC clip value
