@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class GC:
     'Gamma Correction'
 

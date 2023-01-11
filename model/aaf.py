@@ -2,6 +2,7 @@
 import numpy as np
 from scipy.ndimage import correlate
 
+
 class AAF:
     'Anti-aliasing Filter'
 
@@ -23,4 +24,3 @@ class AAF:
                                                 [1, 0, 1, 0, 1]])/16)
         self.img = aaf_img
         return self.img
-

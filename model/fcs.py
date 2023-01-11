@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class FCS:
     'False Color Suppresion'
 
@@ -23,12 +24,12 @@ class FCS:
         fcs_img = np.empty((img_h, img_w, img_c), np.int16)
         for y in range(img_h):
             for x in range(img_w):
-                if np.abs(self.edgemap[y,x]) <= self.fcs_edge[0]:
+                if np.abs(self.edgemap[y, x]) <= self.fcs_edge[0]:
                     uvgain = self.gain
-                elif np.abs(self.edgemap[y,x]) > self.fcs_edge[0] and np.abs(self.edgemap[y,x]) < self.fcs_edge[1]:
-                    uvgain = self.intercept - self.slope * self.edgemap[y,x]
+                elif np.abs(self.edgemap[y, x]) > self.fcs_edge[0] and np.abs(self.edgemap[y, x]) < self.fcs_edge[1]:
+                    uvgain = self.intercept - self.slope * self.edgemap[y, x]
                 else:
                     uvgain = 0
-                fcs_img[y,x,:] = uvgain * (self.img[y,x,:]) / 256 + 128
+                fcs_img[y, x, :] = uvgain * (self.img[y, x, :]) / 256 + 128
         self.img = fcs_img
         return self.clipping()

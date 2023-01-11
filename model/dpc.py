@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class DPC:
     'Dead Pixel Correction'
 
@@ -55,4 +56,3 @@ class DPC:
                 dpc_img[y, x] = p0
         self.img = dpc_img
         return self.clipping()
-
