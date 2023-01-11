@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class BCC:
     'Brightness Contrast Control'
 

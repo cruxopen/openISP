@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class EE:
     'Edge Enhancement'
 
@@ -43,7 +44,10 @@ class EE:
         em_img = np.empty((img_h, img_w), np.int16)
         for y in range(img_pad.shape[0] - 2):
             for x in range(img_pad.shape[1] - 4):
-                em_img[y,x] = np.sum(np.multiply(img_pad[y:y+3, x:x+5], self.edge_filter[:, :])) / 8
-                ee_img[y,x] = img_pad[y+1,x+2] + self.emlut(em_img[y,x], self.thres, self.gain, self.emclip)
+                em_img[y, x] = np.sum(np.multiply(
+                    img_pad[y:y+3, x:x+5], self.edge_filter[:, :])) / 8
+                ee_img[y, x] = img_pad[y+1, x+2] + \
+                    self.emlut(em_img[y, x], self.thres,
+                               self.gain, self.emclip)
         self.img = ee_img
         return self.clipping(), em_img

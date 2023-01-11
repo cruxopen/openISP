@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class BLC:
     'Black Level Compensation'
 
@@ -23,7 +24,7 @@ class BLC:
         beta = self.parameter[5]
         raw_h = self.img.shape[0]
         raw_w = self.img.shape[1]
-        blc_img = np.empty((raw_h,raw_w), np.int16)
+        blc_img = np.empty((raw_h, raw_w), np.int16)
         if self.bayer_pattern == 'rggb':
             r = self.img[::2, ::2] + bl_r
             b = self.img[1::2, 1::2] + bl_b
@@ -62,4 +63,3 @@ class BLC:
             blc_img[1::2, 1::2] = gb
         self.img = blc_img
         return self.clipping()
-

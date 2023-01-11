@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class WBGC:
     'Auto White Balance Gain Control'
 

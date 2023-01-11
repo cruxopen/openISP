@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 
+
 class CNF:
     'Chroma Noise Filtering'
 
@@ -89,13 +90,14 @@ class CNF:
         for i in range(y - 4, y + 4, 1):
             for j in range(x - 4, x + 4, 1):
                 if i % 2 == 1 and j % 2 == 0:
-                    avgG = avgG + img[i,j]
+                    avgG = avgG + img[i, j]
                 elif i % 2 == 0 and j % 2 == 1:
                     avgG = avgG + img[i, j]
                 elif i % 2 == 0 and j % 2 == 0:
-                    avgC1 = avgC1 + img[i,j]    # weights are equal, could be as gaussian dist
+                    # weights are equal, could be as gaussian dist
+                    avgC1 = avgC1 + img[i, j]
                 elif i % 2 == 1 and j % 2 == 1:
-                    avgC2 = avgC2 + img[i,j]
+                    avgC2 = avgC2 + img[i, j]
         avgG = avgG / 40
         avgC1 = avgC1 / 25
         avgC2 = avgC2 / 16
@@ -112,9 +114,9 @@ class CNF:
     def cnf(self, is_color, y, x, img):
         is_noise, avgG, avgC1, avgC2 = self.cnd(y, x, img)
         if is_noise:
-            pix_out = self.cnc(is_color, img[y,x], avgG, avgC1, avgC2)
+            pix_out = self.cnc(is_color, img[y, x], avgG, avgC1, avgC2)
         else:
-            pix_out = img[y,x]
+            pix_out = img[y, x]
         return pix_out
 
     def execute(self):
@@ -132,7 +134,8 @@ class CNF:
                     cnf_img[y, x] = self.cnf('r', y + 4, x + 4, img_pad)
                     cnf_img[y, x + 1] = gr
                     cnf_img[y + 1, x] = gb
-                    cnf_img[y + 1, x + 1] = self.cnf('b', y + 5, x + 5, img_pad)
+                    cnf_img[y + 1, x +
+                            1] = self.cnf('b', y + 5, x + 5, img_pad)
                 elif self.bayer_pattern == 'bggr':
                     b = img_pad[y + 4, x + 4]
                     gb = img_pad[y + 4, x + 5]
@@ -141,7 +144,8 @@ class CNF:
                     cnf_img[y, x] = self.cnf('b', y + 4, x + 4, img_pad)
                     cnf_img[y, x + 1] = gb
                     cnf_img[y + 1, x] = gr
-                    cnf_img[y + 1, x + 1] = self.cnf('r', y + 5, x + 5, img_pad)
+                    cnf_img[y + 1, x +
+                            1] = self.cnf('r', y + 5, x + 5, img_pad)
                 elif self.bayer_pattern == 'gbrg':
                     gb = img_pad[y + 4, x + 4]
                     b = img_pad[y + 4, x + 5]
