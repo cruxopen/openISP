@@ -30,7 +30,7 @@ class HSC:
         hsc_img = np.empty((img_h, img_w, img_c), np.int16)
         hsc_img[:,:,0] = (self.img[:,:,0] - 128) * lut_cos[self.hue] + (self.img[:,:,1] - 128) * lut_sin[self.hue] + 128
         hsc_img[:,:,1] = (self.img[:,:,1] - 128) * lut_cos[self.hue] - (self.img[:,:,0] - 128) * lut_sin[self.hue] + 128
-        hsc_img[:,:,0] = self.saturation * (sel.img[:,:,0] - 128) / 256 + 128
+        hsc_img[:,:,0] = self.saturation * (self.img[:,:,0] - 128) / 256 + 128
         hsc_img[:,:,1] = self.saturation * (self.img[:,:,1] - 128) / 256 + 128
         self.img = hsc_img
         return self.clipping()
