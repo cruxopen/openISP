@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "sensor": {
+    "name": "ar1335",
+    "exposure_ctrl": "coarse_integration_time",
+    "gain_ctrl": "gain"
+  },
+  "isp": {
+    "width": 3840,
+    "height": 2160,
+    "bayer_pattern": "rggb",
+    "dpc_thres": 16,
+    "dpc_mode": "gradient",
+    "bl": [42, 43, 42, 42],
+    "bl_alpha": 0,
+    "bl_beta": 0,
+    "awb_gain": [1536, 1024, 1024, 1126],
+    "cnf_thres": 0,
+    "ccm": [[1024, 0, 0, 0], [0, 1024, 0, 0], [0, 0, 1024, 0]],
+    "gamma": 0.45,
+    "csc": [[263, 516, 100, 16384], [-152, -298, 450, 131072], [450, -377, -73, 131072]],
+    "nlm_h": 15,
+    "nlm_search_r": 2,
+    "nlm_dshift": 3,
+    "bnf_dw": [[8, 12, 32, 12, 8], [12, 64, 128, 64, 12], [32, 128, 1024, 128, 32], [12, 64, 128, 64, 12], [8, 12, 32, 12, 8]],
+    "bnf_rw": [0, 8, 16, 32],
+    "bnf_rthres": [128, 32, 8],
+    "edge_filter": [[-1, 0, -1, 0, -1], [-1, 0, 8, 0, -1], [-1, 0, -1, 0, -1]],
+    "ee_gain": [32, 128],
+    "ee_thres": [32, 64],
+    "ee_emclip": [-64, 64],
+    "fcs_edge": [32, 64],
+    "fcs_gain": 256,
+    "hue": 0,
+    "saturation": 256,
+    "brightness": 0,
+    "contrast": 0,
+    "stats_x0": 0,
+    "stats_y0": 0,
+    "stats_zw": 0,
+    "stats_zh": 0,
+    "awb_sat": 1020,
+    "awb_dark": 16,
+    "af_coring": 4
+  },
+  "ae": {
+    "enable": true,
+    "target": 184.0,
+    "damping": 0.5,
+    "ratio_max": 4.0,
+    "hl_bin": 250,
+    "hl_frac": 0.02,
+    "hl_scale": 0.7,
+    "lines_min": 8,
+    "lines_max": 3118,
+    "flicker_lines": 0,
+    "gain_1x": 16,
+    "gain_code_min": 0,
+    "gain_code_max": 4,
+    "gain_table": [1.0, 2.0, 4.0, 8.0, 16.0, 32.0],
+    "dgain_max": 4.0,
+    "delay": 2
+  },
+  "awb": {
+    "enable": true,
+    "min_quads": 16,
+    "speed": 0.5,
+    "locus_dist": 0.25,
+    "gain_min": 256,
+    "gain_max": 8191,
+    "illuminants": []
+  },
+  "af": {
+    "enable": false,
+    "roi": [4, 12, 4, 12],
+    "pos_min": 0,
+    "pos_max": 1023,
+    "step": 32
+  },
+  "meta": {
+    "blc": {
+      "bl": [42, 43, 42, 42],
+      "read_noise": [0.5769256760978339, 0.5726113975032698, 0.5745211392103057, 0.5746502459209917],
+      "hot_pixels": 91,
+      "hot_ppm": 43.88503086419753,
+      "dpc_thres": 16,
+      "note": "dark frame at 1080p (same sensor black level)"
+    }
+  }
+}
