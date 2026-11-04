@@ -102,3 +102,23 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# firmware library sources (the generic Python "lib/" rule above)
+!sw/lib/
+
+# Vivado / build outputs
+build/
+*.jou
+*.str
+.Xil/
+clockInfo.txt
+cong/
+# kernel module build outputs
+*.ko
+*.mod
+*.mod.c
+*.o
+*.a
+.*.cmd
+Module.symvers
+modules.order

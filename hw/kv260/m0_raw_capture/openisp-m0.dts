@@ -1,0 +1,204 @@
+// SPDX-License-Identifier: MIT
+/*
+ * KV260 M0 RAW capture overlay (AR1335 on IAS1/J8).
+ *
+ *   ar1335 -> csiss@80010000 -> openisp (yuyv-raw) -> fb_wr@80020000 -> /dev/videoN
+ *
+ * Build on the board:  dtc -@ -I dts -O dtb -o openisp-m0.dtbo openisp-m0.dts
+ */
+/dts-v1/;
+/plugin/;
+
+&fpga_full {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	firmware-name = "openisp-m0.bit.bin";
+	resets = <&zynqmp_reset 116>, <&zynqmp_reset 117>, <&zynqmp_reset 118>, <&zynqmp_reset 119>;
+};
+
+&amba {
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	afi0 {
+		compatible = "xlnx,afi-fpga";
+		config-afi = <0 0>, <1 0>, <2 0>, <3 0>, <4 0>, <5 0>, <6 0>, <7 0>,
+			     <8 0>, <9 0>, <10 0>, <11 0>, <12 0>, <13 0>, <14 0>, <15 0>;
+	};
+
+	/* clk_wiz outputs derived from pl_clk0 (100 MHz) */
+	clk_100M: pl0_ref_100M {
+		#clock-cells = <0>;
+		compatible = "fixed-factor-clock";
+		clocks = <&zynqmp_clk 71>;
+		clock-div = <1>;
+		clock-mult = <1>;
+	};
+	clk_200M: pl0_ref_200M {
+		#clock-cells = <0>;
+		compatible = "fixed-factor-clock";
+		clocks = <&zynqmp_clk 71>;
+		clock-div = <1>;
+		clock-mult = <2>;
+	};
+	clk_300M: pl0_ref_300M {
+		#clock-cells = <0>;
+		compatible = "fixed-factor-clock";
+		clocks = <&zynqmp_clk 71>;
+		clock-div = <1>;
+		clock-mult = <3>;
+	};
+
+	/* [0] AP1302_RST_B [1] AP1302_STANDBY [2] IAS_XSHUTDOWN_B [3] RPi enable */
+	cam_gpio: gpio@80080000 {
+		compatible = "xlnx,xps-gpio-1.00.a";
+		reg = <0x0 0x80080000 0x0 0x10000>;
+		clocks = <&clk_100M>;
+		#gpio-cells = <2>;
+		gpio-controller;
+		xlnx,all-inputs = <0x0>;
+		xlnx,all-outputs = <0x1>;
+		xlnx,dout-default = <0x0>;
+		xlnx,gpio-width = <0x4>;
+		xlnx,is-dual = <0x0>;
+		xlnx,tri-default = <0xffffffff>;
+	};
+
+	i2c@80030000 {
+		compatible = "xlnx,axi-iic-2.1", "xlnx,xps-iic-2.00.a";
+		reg = <0x0 0x80030000 0x0 0x10000>;
+		clocks = <&clk_100M>;
+		clock-names = "s_axi_aclk";
+		interrupt-parent = <&gic>;
+		interrupts = <0 91 4>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		i2c-mux@74 {
+			compatible = "nxp,pca9546";
+			reg = <0x74>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			i2c@1 {
+				reg = <1>;
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				sensor@36 {
+					compatible = "ar1335";
+					reg = <0x36>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					reset-gpios = <&cam_gpio 2 0>;
+
+					port {
+						clock-lanes = <0>;
+						data-lanes = <1 2 3 4>;
+						sensor_out: endpoint {
+							remote-endpoint = <&csi_in>;
+						};
+					};
+				};
+			};
+		};
+	};
+
+	csiss@80010000 {
+		compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
+		reg = <0x0 0x80010000 0x0 0x10000>;
+		clock-names = "lite_aclk", "dphy_clk_200M", "video_aclk";
+		clocks = <&clk_100M>, <&clk_200M>, <&clk_300M>;
+		interrupt-parent = <&gic>;
+		interrupts = <0 90 4>;
+		xlnx,csi-pxl-format = <0x2b>;		/* RAW10 */
+		xlnx,axis-tdata-width = <0x20>;
+		xlnx,max-lanes = <4>;
+		xlnx,vc = <4>;
+		xlnx,ppc = <2>;
+		xlnx,vfb;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				xlnx,video-format = <12>;	/* XVIP_VF_MONO_SENSOR */
+				xlnx,video-width = <10>;
+				xlnx,cfa-pattern = "rggb";
+				csi_in: endpoint {
+					data-lanes = <1 2 3 4>;
+					remote-endpoint = <&sensor_out>;
+				};
+			};
+			port@1 {
+				reg = <1>;
+				xlnx,video-format = <12>;
+				xlnx,video-width = <10>;
+				xlnx,cfa-pattern = "rggb";
+				csi_out: endpoint {
+					remote-endpoint = <&isp_in>;
+				};
+			};
+		};
+	};
+
+	openisp {
+		compatible = "openisp,isp-1.0";
+		openisp,output-format = "yuyv-raw";
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				isp_in: endpoint {
+					remote-endpoint = <&csi_out>;
+				};
+			};
+			port@1 {
+				reg = <1>;
+				isp_out: endpoint {
+					remote-endpoint = <&vcap_in>;
+				};
+			};
+		};
+	};
+
+	fb_wr: fb_wr@80020000 {
+		compatible = "xlnx,axi-frmbuf-wr-v2.1";
+		reg = <0x0 0x80020000 0x0 0x10000>;
+		#dma-cells = <1>;
+		interrupt-parent = <&gic>;
+		interrupts = <0 89 4>;
+		reset-gpios = <&gpio 78 1>;		/* EMIO 0, active low */
+		xlnx,vid-formats = "yuyv";
+		xlnx,dma-addr-width = <32>;
+		xlnx,pixels-per-clock = <2>;
+		xlnx,max-width = <4224>;
+		xlnx,max-height = <3136>;
+		clocks = <&clk_300M>;
+		clock-names = "ap_clk";
+	};
+
+	openisp_vcap {
+		compatible = "xlnx,video";
+		dmas = <&fb_wr 0>;
+		dma-names = "port0";
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				direction = "input";
+				vcap_in: endpoint {
+					remote-endpoint = <&isp_out>;
+				};
+			};
+		};
+	};
+};

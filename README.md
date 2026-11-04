@@ -112,6 +112,28 @@ It loads `test.raw` image and `config.csv` and executes the algorithms step by s
 
 You can adjust the ISP pipeline as you want. However, algorithms like DPC, BLC, LSC, ANF, AWB, CFA, only work in Bayer domain. GC, CCM, CSC work in RGB domain. Others work in YUV domain. It's not saying like NF only work in YUV domain. Just in openISP case, it works in YUV domain. Noise filtering could be done in Bayer/RGB/YUV domain and in both temporal/spatial domain.
 
+## Hardware ISP on AMD Kria KV260
+
+A bit-exact hardware implementation of this pipeline in SystemVerilog (no HLS), running on the
+KV260 with the onsemi AR1335 sensor (connector J8), with 3A statistics in hardware, a Linux
+driver, AE/AWB/AF firmware and a PC tuning tool.
+
+| Part | Location | Status |
+|---|---|---|
+| Integer golden model (bit-accurate reference, 3A statistics) | `hwmodel/`, `docs/hw/golden_model.md` | done |
+| RTL: DPC, BLC, AAF, AWB gain, CNF, CFA, CCM, gamma, CSC, NLM, BNF, EE, FCS/HSC/BCC, 3A statistics; 2 pixels/clock | `hw/rtl/`, `docs/hw/rtl.md` | bit-exact vs the model (Verilator / xsim) |
+| Control: shadow registers + frame-boundary commit, IRQ, soft reset, AXI4-Lite (`isp_axil`) | `hw/rtl/top/` | done |
+| Block design: CSI-2 RX -> ISP -> YUYV -> frame buffer -> DDR | `hw/kv260/m3_isp/` | on board: 1080p30 and 4K30 at a 200 MHz video clock (timing met) |
+| Linux driver (V4L2 sub-device, register / statistics ioctls) | `hw/kv260/driver/` | on board (Kria Ubuntu 22.04, 5.15) |
+| Firmware: `openisp` tool, 3A daemon (AE / AWB / CCM / AF), live tuning socket; `oisp_view` zero-copy HDMI/DP preview | `sw/`, `docs/sw.md` | on board: AE/AWB closed loop, 30 fps preview |
+| Tuning tool: black level, noise, white balance (white target or ColorChecker), CCM, bit-exact preview, live tuning | `isptune/` | done; AR1335 black level calibrated, colour calibration pending |
+| Tests | `tests/` (`python -m pytest tests`) | 127 tests: model, RTL vs model, firmware vs model, tuning |
+
+Bring-up notes, measured AR1335 behaviour and known board issues: `hw/kv260/README.md`.
+
+Open items: colour calibration (CCM) with a ColorChecker, 250 MHz video clock, NV12 output,
+lens shading correction.
+
 ## License
 
 MIT @Crux
